@@ -47,11 +47,47 @@ signal:141
  - Se usa i2s_read() para leer múltiples muestras de forma eficiente.
  - Se recomienda usar GPIO36 (ADC1_CHANNEL_0) ya que es de los pocos compatibles con I2S.
 
-### Posibles mejoras
+### 🔍 Diagnóstico rápido
+1. ¿Estás usando el pin correcto?
+El canal ADC1_CHANNEL_0 corresponde a GPIO36 (VP).
 
- 1. Graficar en tiempo real con React.js + WebSocket
- 2. Guardar datos en tarjeta SD
- 3. Enviar muestras por WiFi (MQTT / HTTP / WebSocket)
- 4. Filtrado digital o compresión de datos
+## Asegúrate de que la señal esté conectada a ese pin.
 
+2. ¿La señal está viva?
+Si no hay nada conectado, el pin flota (quedará en 0).
+
+Si tienes un potenciómetro, sensor, generador de funciones, etc., conéctalo al GPIO36 y alimenta el circuito.
+
+Señales válidas: 0 V a ~3.3 V (con 11 dB de atenuación llega hasta ~3.6 V máx).
+
+3. ¿Estás usando una fuente de señal compatible?
+
+a) Si estás usando un potenciómetro, conecta:
+
+b) Un extremo a 3.3 V
+
+c) Otro a GND
+
+d) El pin central (wiper) al GPIO36
+
+4. ¿Qué pasa si no conectas nada?
+El ADC lee voltaje en el aire → ruido o ceros.
+
+Es normal que leas 0 si el pin está desconectado o aterrizado.
+
+## Prueba sencilla con potenciómetro
+Conecta un potenciómetro así:
+
+[3.3V] ─── [ POT ] ─── [GND]
+               │
+            GPIO36
+
+Verás valores como:
+
+signal:23
+signal:88
+signal:130
+signal:511
+
+A medida que giras el potenciómetro.
 
