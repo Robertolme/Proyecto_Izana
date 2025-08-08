@@ -1,0 +1,15 @@
+{
+  "name": "proyecto_izana",
+  "version": "1.0.0",
+  "description": "el primero que nada que se joda caballo fiestero fakiu fakiu fakui",
+  "main": "test-simulator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io-client": "^4.8.1"
+  }
+}
