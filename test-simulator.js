@@ -66,13 +66,13 @@ function startSimulation() {
     const elapsedTime = currentTime - startTime;
     
     // Generate a complex signal: sine wave + square wave + triangle + noise
-    const sine = generateSineWave(elapsedTime, 2, 100, 0);        // 2 Hz sine
+    //const sine = generateSineWave(elapsedTime, 2, 100, 0);        // 2 Hz sine
     const square = generateSquareWave(elapsedTime, 0.5, 80, 0);   // 0.5 Hz square
-    const triangle = generateTriangleWave(elapsedTime, 1.5, 60, 0); // 1.5 Hz triangle
-    const noise = generateNoise(15, 0);                           // Small noise
+    //const triangle = generateTriangleWave(elapsedTime, 1.5, 60, 0); // 1.5 Hz triangle
+    //const noise = generateNoise(15, 0);                           // Small noise
     
     // Combine signals and normalize
-    let combinedValue = sine + square + triangle + noise;
+    let combinedValue = square;//sine; //+ square + triangle + noise;
     combinedValue = Math.max(0, Math.min(511, combinedValue));
     
     // Emit as if it came from UART
