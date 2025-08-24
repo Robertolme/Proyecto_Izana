@@ -1,93 +1,233 @@
-# Proyecto_Izana
+# Proyecto Izana - Modular Digital Oscilloscope
 
-el primero que nada que se joda caballo fiestero fakiu fakiu fakui
+**A high-performance, modular digital oscilloscope system with real-time signal acquisition, processing, and visualization capabilities.**
 
-# Adquisición de Señal con ESP32 vía I2S + ADC
+---
 
-Este proyecto permite capturar señales analógicas a alta velocidad usando el ADC interno del ESP32 combinado con el periférico I2S. El objetivo es obtener muestras de hasta **1 millón por segundo (1 MSPS)** y enviarlas por puerto serial para análisis, graficación o visualización en una interfaz web.
+## 🌟 Overview
 
-## Características
+Proyecto Izana is a complete digital oscilloscope solution featuring:
 
-- Lectura de señales analógicas a alta velocidad (1 MSPS)
-- Resolución de 9 bits (0 - 511)
-- Uso del periférico I2S para mejorar velocidad y rendimiento
-- Salida por Serial en formato `signal:<valor>`
-- Ideal para construir un osciloscopio casero o logger de señales
+- **High-speed ESP32 ADC sampling** (up to 1 MSPS via I2S)
+- **Modular C++ backend** with extensible processing pipeline
+- **Real-time React frontend** with professional oscilloscope interface
+- **WebSocket communication** for live data streaming
+- **Multi-channel support** with synchronized triggers
+- **Advanced signal processing** (FFT, filters, custom modules)
 
-## Requisitos
+## 🚀 Key Features
 
-- ESP32 Dev Module (cualquier placa compatible)
-- Arduino IDE o PlatformIO
-- Puerto GPIO36 como entrada analógica (canal ADC1_CHANNEL_0)
+### Hardware Layer (ESP32)
+- ⚡ **1 MSPS sampling rate** using I2S + ADC
+- 📊 **9-bit resolution** (0-511 ADC values)
+- 🔌 **UART communication** at 115200 baud
+- 📡 **GPIO36 analog input** (ADC1_CHANNEL_0)
 
-## Archivos importantes
+### C++ Backend
+- 🏗️ **Modular architecture** with extensible processing modules
+- 🔄 **Multi-channel processing** with synchronized triggers
+- 📈 **Real-time transformations** (scaling, offset, trigger alignment)
+- 🌐 **WebSocket server** for frontend communication
+- 🛠️ **Plugin system** for FFT, filters, and custom analysis
 
-- `main.ino`: Código fuente principal del proyecto
-- `README.md`: Este archivo
+### React Frontend
+- 📊 **Professional oscilloscope interface** with Chart.js visualization
+- ⚙️ **Advanced parameter controls** (timebase, voltage, trigger)
+- 🎛️ **Multi-channel display** with independent settings
+- 🔧 **Processing module configuration** (FFT, filters, storage)
+- 📱 **Responsive design** for different screen sizes
 
-## ¿Cómo usar?
+---
 
-### En Arduino IDE:
+## 📁 Project Structure
 
-1. Copia el código en un nuevo proyecto `.ino`.
-2. Selecciona la placa: **ESP32 Dev Module**
-3. Conecta la señal analógica al pin **GPIO36**
-4. Carga el programa y abre el **Monitor Serial** a 115200 baudios
+```
+Proyecto_Izana/
+├── 🔧 backend-cpp/          # Modular C++ backend
+│   ├── include/             # Header files
+│   │   ├── core/           # Core modules (UART, DataProcessor, WebSocket)
+│   │   ├── processing/     # Processing modules (FFT, filters)
+│   │   └── utils/          # Utilities (Logger, Config)
+│   ├── src/                # Implementation files
+│   ├── CMakeLists.txt      # Build configuration
+│   └── build.sh           # Build script
+├── 💻 backend/              # Node.js backend (original/legacy)
+├── ⚛️ frontend/             # React frontend
+│   ├── src/components/     # UI components
+│   │   ├── Oscilloscope.js # Main oscilloscope display
+│   │   └── ParameterPanel.js # Advanced controls
+├── 📟 codigos del arduino/  # ESP32 firmware
+├── 📚 docs/                # Documentation
+│   ├── ARCHITECTURE.md     # System architecture
+│   ├── PROTOCOL.md         # Communication protocols
+│   └── EXAMPLES.md         # Usage examples
+└── 🧪 test-simulator.js    # Development test simulator
+```
 
-## ejemplo de salida 
+---
 
-signal:121
-signal:118
-signal:130
-signal:141
+## 🚀 Quick Start
 
+### 1. Hardware Setup
+```bash
+# Connect ESP32 to computer via USB
+# Upload firmware from 'codigos del arduino/adc/adc.ino'
+# Connect analog signal to GPIO36
+```
 
-## Notas técnicas
- - El ADC se configura a 9 bits y el I2S extrae los datos en bloques de 16 bits (por hardware).
- - Se usa i2s_read() para leer múltiples muestras de forma eficiente.
- - Se recomienda usar GPIO36 (ADC1_CHANNEL_0) ya que es de los pocos compatibles con I2S.
+### 2. C++ Backend (Recommended)
+```bash
+cd backend-cpp
 
-### 🔍 Diagnóstico rápido
-1. ¿Estás usando el pin correcto?
-El canal ADC1_CHANNEL_0 corresponde a GPIO36 (VP).
+# Install dependencies (Ubuntu/Debian)
+sudo apt-get install build-essential cmake libserial-dev nlohmann-json3-dev
 
-## Asegúrate de que la señal esté conectada a ese pin.
+# Build (includes dependency installation)
+./build.sh --install-deps --clean Release
 
-2. ¿La señal está viva?
-Si no hay nada conectado, el pin flota (quedará en 0).
+# Run
+./build/izana-backend
+```
 
-Si tienes un potenciómetro, sensor, generador de funciones, etc., conéctalo al GPIO36 y alimenta el circuito.
+### 3. Frontend
+```bash
+cd frontend
+npm install
+npm start
+# Open http://localhost:3000
+```
 
-Señales válidas: 0 V a ~3.3 V (con 11 dB de atenuación llega hasta ~3.6 V máx).
+### 4. Alternative: Node.js Backend (Legacy)
+```bash
+cd backend
+npm install
+node server.js
+# Server runs on port 3001
+```
 
-3. ¿Estás usando una fuente de señal compatible?
+---
 
-a) Si estás usando un potenciómetro, conecta:
+## 📖 Documentation
 
-b) Un extremo a 3.3 V
+| Document | Description |
+|----------|-------------|
+| [**ARCHITECTURE.md**](docs/ARCHITECTURE.md) | Complete system architecture and design patterns |
+| [**PROTOCOL.md**](docs/PROTOCOL.md) | Communication protocols and message formats |
+| [**EXAMPLES.md**](docs/EXAMPLES.md) | Practical usage examples and integration guides |
 
-c) Otro a GND
+---
 
-d) El pin central (wiper) al GPIO36
+## 🏗️ Architecture Highlights
 
-4. ¿Qué pasa si no conectas nada?
-El ADC lee voltaje en el aire → ruido o ceros.
+### Modular Design
+- **Extensible Processing Pipeline**: Add FFT, filters, custom modules without core changes
+- **Multi-Channel Support**: Up to 8 synchronized channels with independent parameters
+- **Plugin Architecture**: Dynamic loading of processing modules
+- **Parameter Versioning**: Backward-compatible parameter system
 
-Es normal que leas 0 si el pin está desconectado o aterrizado.
+### Real-Time Performance
+- **Lock-Free Data Structures**: High-throughput data processing
+- **Circular Buffers**: Continuous streaming without memory allocation
+- **Threaded Architecture**: Separate threads for I/O, processing, communication
+- **WebSocket Streaming**: Low-latency real-time data transmission
 
-## Prueba sencilla con potenciómetro
-Conecta un potenciómetro así:
+### Scalability Features
+- **Processing Modules**: FFT analysis, digital filters, data storage
+- **Multi-Channel Coordination**: Synchronized triggers and data alignment  
+- **Extensible Protocols**: JSON-based messaging with type safety
+- **Configuration Management**: Flexible, hierarchical configuration system
 
-[3.3V] ─── [ POT ] ─── [GND]
-               │
-            GPIO36
+---
 
-Verás valores como:
+## 🔬 Technical Specifications
 
-signal:23
-signal:88
-signal:130
-signal:511
+| Component | Specification |
+|-----------|---------------|
+| **Sampling Rate** | Up to 1 MSPS (I2S + ADC) |
+| **Resolution** | 9-bit (0-511 ADC values) |
+| **Channels** | Up to 8 synchronized channels |
+| **Communication** | UART (115200) + WebSocket |
+| **Latency** | < 100ms end-to-end |
+| **Buffer Size** | Configurable (default 10K samples) |
+| **Platform Support** | Linux, Windows, macOS |
 
-A medida que giras el potenciómetro.
+---
 
+## 🎯 Usage Examples
+
+### Basic Operation
+1. **Connect Hardware**: ESP32 via USB, signal to GPIO36
+2. **Start Backend**: C++ backend automatically detects ESP32
+3. **Open Frontend**: Browser interface at localhost:3000
+4. **Configure**: Adjust timebase, voltage scale, trigger settings
+5. **Observe**: Real-time waveform visualization
+
+### Advanced Multi-Channel Setup
+```javascript
+// Configure 2-channel synchronized acquisition
+const config = {
+  channels: [
+    { id: 0, name: "Input", enabled: true, triggerLevel: 1.65 },
+    { id: 1, name: "Reference", enabled: true, triggerLevel: 2.5 }
+  ],
+  synchronizedTriggers: true,
+  masterChannel: 0
+};
+```
+
+### Custom Processing Module (C++)
+```cpp
+class CustomFilter : public ProcessingModule {
+public:
+    ProcessingResult process(const DataPointCollection& input, 
+                           uint8_t channel, 
+                           const ParameterMap& params) override {
+        // Your custom signal processing here
+        // Return processed data points
+    }
+};
+
+REGISTER_PROCESSING_MODULE(CustomFilter, "custom_filter");
+```
+
+---
+
+## 🐛 Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| **ESP32 not detected** | Check USB cable, driver installation, port permissions |
+| **No signal data** | Verify GPIO36 connection, signal voltage (0-3.3V range) |
+| **WebSocket connection fails** | Check firewall, ensure backend is running on correct port |
+| **Build errors** | Install missing dependencies with `./build.sh --install-deps` |
+
+For detailed troubleshooting, see the [**EXAMPLES.md**](docs/EXAMPLES.md) documentation.
+
+---
+
+## 🤝 Contributing
+
+1. **Fork** the repository
+2. **Create** feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** changes (`git commit -m 'Add amazing feature'`)
+4. **Push** to branch (`git push origin feature/amazing-feature`)
+5. **Open** Pull Request
+
+---
+
+## 📜 License
+
+This project is open source. See LICENSE file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **ESP32 Community** for excellent hardware and documentation
+- **Chart.js** for powerful visualization capabilities  
+- **WebSocket** and **Socket.IO** for real-time communication
+- **CMake** and **React** ecosystems for development tools
+
+---
+
+**Proyecto Izana - Building the future of modular signal acquisition and analysis**
